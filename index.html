@@ -125,8 +125,6 @@ button { font: inherit; }
   border-radius: 50%;
   border: 1px solid rgba(178, 60, 93, 0.25);
   background: rgba(255, 250, 245, 0.88);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
   color: var(--rose-deep);
   display: grid; place-items: center;
   cursor: pointer;
@@ -161,10 +159,11 @@ main {
 h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(40px, 11.5vw, 60px); line-height: 1.04; margin: 2px 0 0; text-wrap: balance; }
 h1 em { color: var(--rose-deep); }
 body.opened .rise { animation: rise 1s cubic-bezier(.2, .8, .2, 1) backwards; }
-@keyframes rise { 0% { opacity: 0; transform: translateY(18px); filter: blur(6px); } 100% { opacity: 1; transform: none; filter: none; } }
+@keyframes rise { 0% { opacity: 0; transform: translateY(18px); } 100% { opacity: 1; transform: none; } }
 
-.bq-stage { width: min(100%, 390px); margin-top: 6px; position: relative; cursor: pointer; }
-#bouquet { width: 100%; height: auto; display: block; overflow: visible; filter: drop-shadow(0 18px 26px rgba(150, 60, 85, 0.22)); transform-origin: 50% 92%; }
+.bq-stage { width: min(100%, 390px); margin-top: 6px; position: relative; cursor: pointer; isolation: isolate; }
+.bq-stage::after { content: ""; position: absolute; left: 20%; right: 20%; bottom: 1%; height: 8%; border-radius: 50%; background: radial-gradient(closest-side, rgba(150, 60, 85, 0.3), rgba(150, 60, 85, 0)); z-index: -1; }
+#bouquet { width: 100%; height: auto; display: block; overflow: visible; transform-origin: 50% 92%; }
 body.opened #bouquet { animation: sway 7s ease-in-out 4.2s infinite; }
 @keyframes sway { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
 .bq-stage.tapped #bouquet { animation: jiggle 0.5s ease; }
@@ -209,8 +208,8 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
 .letter .salut { font-family: var(--font-display); font-style: italic; font-size: 34px; line-height: 1.2; color: var(--rose-deep); margin-bottom: 0.6em; }
 .letter .it { font-family: var(--font-display); font-style: italic; font-size: 23px; line-height: 1.45; color: var(--rose-deep); }
 .letter .signature { font-family: var(--font-hand); font-size: 60px; line-height: 1.1; color: var(--rose-deep); margin: 0; text-align: right; padding-right: 6px; }
-.w { display: inline-block; transition: opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease; }
-.letter.armed .w { opacity: 0.08; transform: translateY(6px); filter: blur(3px); }
+.w { display: inline-block; transition: opacity 0.7s ease, transform 0.7s ease; }
+.letter.armed .w { opacity: 0.08; transform: translateY(6px); }
 .letter.armed.revealed .w { opacity: 1; transform: none; filter: none; }
 .letter.armed .signature { clip-path: inset(0 0 0 100%); transition: clip-path 1.8s cubic-bezier(.5, 0, .3, 1); }
 .letter.armed.revealed .signature { clip-path: inset(0 0 0 0); }
@@ -223,7 +222,7 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
 .polaroid .frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.35) 45%, rgba(255, 255, 255, 0) 60%); transform: translateX(-120%); pointer-events: none; }
 .polaroid figcaption { font-family: var(--font-hand); font-size: 42px; line-height: 1.3; text-align: center; color: var(--ink); padding-top: 2px; }
 .polaroid.armed { transform: translateY(-24px) rotate(-9deg); opacity: 0.4; transition: transform 1s cubic-bezier(.2, .9, .3, 1.2), opacity 0.6s ease; }
-.polaroid.armed img { filter: brightness(1.9) contrast(0.45) saturate(0) sepia(0.4) blur(2px); transition: filter 4.5s cubic-bezier(.4, 0, .2, 1) 0.5s; }
+.polaroid.armed img { filter: brightness(1.8) contrast(0.5) saturate(0); transition: filter 4.5s cubic-bezier(.4, 0, .2, 1) 0.5s; }
 .polaroid.armed.revealed { transform: rotate(-2.2deg); opacity: 1; }
 .polaroid.armed.revealed img { filter: none; }
 .polaroid.revealed .frame::after { animation: sheen 1.6s ease 4.6s; }
@@ -422,7 +421,7 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
         var y = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * my + t * t * y2;
         var side = i % 2 ? 1 : -1;
         var size = 5 + (1 - t) * 4;
-        el("ellipse", { class: "a-pop", style: D(delay + 0.15 + t * 0.7), cx: x + side * size * 0.9, cy: y, rx: size, ry: size * 0.82, fill: i % 3 ? "#9fb7aa" : "#8aa598", stroke: "#7a9486", "stroke-width": "0.6" });
+        el("ellipse", { cx: x + side * size * 0.9, cy: y, rx: size, ry: size * 0.82, fill: i % 3 ? "#9fb7aa" : "#8aa598", stroke: "#7a9486", "stroke-width": "0.6" });
         leafCount++;
       }
     }
@@ -623,6 +622,7 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
   var ambientUntil = 0;
   function tick() {
     ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = 0.93;
     var now = Date.now();
     for (var i = 0; i < items.length; i++) {
       var p = items[i];
@@ -634,10 +634,11 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
         if (p.ambient && now < ambientUntil) { p.y = -40; p.x = rnd(0, W); }
         else { items.splice(i, 1); i--; continue; }
       }
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = 0.93;
+      var cs = Math.cos(p.rot), sn = Math.sin(p.rot);
+      ctx.setTransform(dpr * cs, dpr * sn, -dpr * sn, dpr * cs, dpr * p.x, dpr * p.y);
       ctx.drawImage(p.sp, -p.size / 2, -p.size / 2, p.size, p.size);
-      ctx.restore();
     }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     for (var j = 0; j < sparks.length; j++) {
       var k = sparks[j];
       k.life++; k.x += k.vx; k.y += k.vy; k.vx *= 0.98; k.vy *= 0.98;
@@ -657,7 +658,7 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
   function rain(cx, cy) {
     if (reduce) return;
     var small = W < 500;
-    var nF = small ? 40 : 60, nP = small ? 32 : 48;
+    var nF = small ? 28 : 56, nP = small ? 22 : 44;
     for (var i = 0; i < 30; i++) add(i % 4 === 0 ? "heart" : i % 3 ? "petal" : "flower", cx + rnd(-30, 30), cy + rnd(-30, 30), true);
     for (var s2 = 0; s2 < 40; s2++) spark(cx, cy, true);
     for (var j = 0; j < nF; j++) add("flower", rnd(-20, W + 20), rnd(-H * 0.9, -30), false);
@@ -768,7 +769,14 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
         musicEl.loop = true;
         musicEl.preload = "auto";
         musicEl.setAttribute("playsinline", "");
-        musicEl.src = toWavDataUri(loop);
+        var uri = toWavDataUri(loop);
+        try {
+          var bin = atob(uri.split(",")[1]), arr = new Uint8Array(bin.length);
+          for (var q = 0; q < bin.length; q++) arr[q] = bin.charCodeAt(q);
+          var burl = URL.createObjectURL(new Blob([arr], { type: "audio/wav" }));
+          musicEl.addEventListener("error", function () { if (musicEl.src !== uri) musicEl.src = uri; }, { once: true });
+          musicEl.src = burl;
+        } catch (e) { musicEl.src = uri; }
         musicReady = true;
       };
       var pr = oac.startRendering();
