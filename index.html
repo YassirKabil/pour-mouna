@@ -133,7 +133,23 @@ button { font: inherit; }
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 #music { pointer-events: none; }
-body.opened #music { opacity: 1; transform: none; pointer-events: auto; }
+#music { display: none; }
+
+/* ---------- Our song ---------- */
+.song { width: 100%; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 16px 18px; background: var(--paper); border-radius: 18px; padding: 18px; box-shadow: 0 18px 40px -22px rgba(120, 40, 64, 0.45); }
+.vinyl { width: 76px; height: 76px; border-radius: 50%; background: radial-gradient(circle, #f6c5d2 0 15%, #b23c5d 15.5% 30%, #1d1417 31%, #2b2024 40%, #1d1417 41%, #2b2024 52%, #1d1417 53%, #2b2024 66%, #1d1417 67% 100%); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.5); position: relative; }
+.vinyl::after { content: ""; position: absolute; inset: 47%; border-radius: 50%; background: var(--paper); }
+body.opened .vinyl { animation: spin 4s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.song-info { display: grid; gap: 0; min-width: 0; }
+.song-label { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-soft); }
+.song-title { font-family: var(--font-display); font-style: italic; font-size: 30px; line-height: 1.1; color: var(--rose-deep); }
+.song-artist { font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); }
+.song-links { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.song-btn { display: block; text-align: center; padding: 12px 10px; border-radius: 999px; background: var(--rose-deep); color: #fff; text-decoration: none; font-size: 15px; letter-spacing: 0.04em; }
+.song-btn.alt { background: transparent; color: var(--rose-deep); border: 1px solid rgba(178, 60, 93, 0.35); }
+.song-btn:focus-visible { outline: 2px solid var(--rose-deep); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { body.opened .vinyl { animation: none; } }
 #music svg { width: 22px; height: 22px; }
 #music .off { display: none; }
 #music[aria-pressed="false"] .on { display: none; }
@@ -307,6 +323,19 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
       Descends, j’ai un mot pour toi
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </span>
+  </section>
+
+  <section class="song" aria-label="Notre son">
+    <div class="vinyl" aria-hidden="true"></div>
+    <div class="song-info">
+      <span class="song-label">À écouter en lisant</span>
+      <span class="song-title">Luz de Luna</span>
+      <span class="song-artist">PNL</span>
+    </div>
+    <div class="song-links">
+      <a class="song-btn" href="https://open.spotify.com/search/PNL%20Luz%20de%20Luna" target="_blank" rel="noopener">Spotify</a>
+      <a class="song-btn alt" href="https://www.youtube.com/results?search_query=PNL+Luz+de+Luna" target="_blank" rel="noopener">YouTube</a>
+    </div>
   </section>
 
   <article class="letter" id="letter" aria-label="Le mot de Yassir">
@@ -752,7 +781,8 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
   }
 
   var musicEl = null, musicReady = false, musicOn = true, liveAudio = null, liveTimer = null;
-  setTimeout(function renderMusic() {
+  var MUSIC_BOX = false;
+  if (MUSIC_BOX) setTimeout(function renderMusic() {
     try {
       var OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
       if (!OAC) return;
@@ -877,7 +907,6 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
     var r = btn.getBoundingClientRect();
     opener.classList.add("is-open");
     window.scrollTo(0, 0);
-    playMusic();
     arm();
     rain(r.left + r.width / 2, r.top + r.height / 2);
     setTimeout(ambient, 3000);
