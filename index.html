@@ -348,7 +348,7 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
 
   <section class="tape" aria-label="Notre son">
     <span class="tape-top">Un extrait pour toi</span>
-    <button id="cassette" type="button" aria-pressed="false" aria-label="Lancer l’extrait de La vie est belle de PNL">
+    <button id="cassette" type="button" aria-pressed="false" aria-label="Lancer l’extrait de Comme pas deux de PNL">
       <svg viewBox="0 0 320 210" aria-hidden="true">
         <defs>
           <linearGradient id="tb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c9d6"/><stop offset="1" stop-color="#e59bb2"/></linearGradient>
@@ -361,7 +361,7 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
         <path d="M26 26a8 8 0 0 1 8-8h252a8 8 0 0 1 8 8v14H26z" fill="#b23c5d"/>
         <text x="38" y="34" font-family="Lora, Georgia, serif" font-size="11" letter-spacing="2" fill="#fff">FACE A</text>
         <text x="282" y="34" text-anchor="end" font-family="Lora, Georgia, serif" font-size="11" letter-spacing="2" fill="#fff">C-60</text>
-        <text x="160" y="66" text-anchor="middle" font-family="Mrs Saint Delafield, Snell Roundhand, cursive" font-size="30" fill="#4b2a34">La vie est belle</text>
+        <text x="160" y="66" text-anchor="middle" font-family="Mrs Saint Delafield, Snell Roundhand, cursive" font-size="30" fill="#4b2a34">Comme pas deux</text>
         <rect x="74" y="74" width="172" height="46" rx="23" fill="#2a1d20"/>
         <path d="M112 117 Q160 124 208 117" stroke="#6b4433" stroke-width="2" fill="none"/>
         <circle cx="112" cy="97" r="21" fill="#5a3a2c"/>
@@ -376,7 +376,7 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
     </button>
     <div class="tape-bar" aria-hidden="true"><span id="tape-progress"></span></div>
     <span class="tape-hint" id="tape-hint">Touche la cassette</span>
-    <a class="tape-full" href="https://music.apple.com/fr/album/la-vie-est-belle/1663880916?i=1663882252" target="_blank" rel="noopener">Écouter le son en entier</a>
+    <a class="tape-full" href="https://music.apple.com/fr/album/comme-pas-deux/1663894685?i=1663897048" target="_blank" rel="noopener">Écouter le son en entier</a>
   </section>
 
   <article class="letter" id="letter" aria-label="Le mot de Yassir">
@@ -943,33 +943,33 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
   var cassette = document.getElementById("cassette");
   var tapeHint = document.getElementById("tape-hint");
   var tapeProg = document.getElementById("tape-progress");
-  var PREVIEW = "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/47/c6/9a/47c69ae4-f675-25db-577e-9eaf7cd75e33/mzaf_15565945451936180078.plus.aac.p.m4a";
+  var PREVIEW = "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/73/4e/aa/734eaa4a-7ddd-d767-37a2-7ee76725c57f/mzaf_4385668939419969452.plus.aac.p.m4a";
   var tape = new Audio();
   tape.preload = "none";
   tape.src = PREVIEW;
   try {
     window.__tapeCb = function (d) {
       try {
-        var hit = (d.results || []).filter(function (r) { return r.trackId === 1663882252 && r.previewUrl; })[0];
+        var hit = (d.results || []).filter(function (r) { return r.trackId === 1663897048 && r.previewUrl; })[0];
         if (hit && tape.paused && tape.currentTime === 0) tape.src = hit.previewUrl;
       } catch (e) {}
     };
     var js = document.createElement("script");
-    js.src = "https://itunes.apple.com/lookup?id=1663882252&country=fr&callback=__tapeCb";
+    js.src = "https://itunes.apple.com/lookup?id=1663897048&country=fr&callback=__tapeCb";
     js.async = true;
     document.head.appendChild(js);
   } catch (e) {}
   function setPlaying(on) {
     tapeEl.classList.toggle("playing", on);
     cassette.setAttribute("aria-pressed", on ? "true" : "false");
-    cassette.setAttribute("aria-label", on ? "Mettre l’extrait en pause" : "Lancer l’extrait de La vie est belle de PNL");
+    cassette.setAttribute("aria-label", on ? "Mettre l’extrait en pause" : "Lancer l’extrait de Comme pas deux de PNL");
   }
   cassette.addEventListener("click", function () {
     if (tape.paused) {
       if (tape.ended) tape.currentTime = 0;
       var p = tape.play();
       tapeHint.textContent = "Ça se lance…";
-      if (p && p.then) p.then(function () { tapeHint.textContent = "PNL · La vie est belle"; }).catch(function () { setPlaying(false); tapeHint.textContent = "Touche encore une fois la cassette"; });
+      if (p && p.then) p.then(function () { tapeHint.textContent = "PNL · Comme pas deux"; }).catch(function () { setPlaying(false); tapeHint.textContent = "Touche encore une fois la cassette"; });
       setPlaying(true);
     } else {
       tape.pause();
