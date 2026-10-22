@@ -135,6 +135,27 @@ button { font: inherit; }
 #music { pointer-events: none; }
 #music { display: none; }
 
+/* ---------- Cassette ---------- */
+.tape { width: 100%; display: grid; justify-items: center; gap: 10px; text-align: center; }
+.tape-top { font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-soft); }
+#cassette { appearance: none; border: 0; background: none; padding: 0; width: min(100%, 330px); cursor: pointer; transition: transform 0.2s ease; touch-action: manipulation; }
+#cassette:active { transform: scale(0.97); }
+#cassette:focus-visible { outline: 2px solid var(--rose-deep); outline-offset: 6px; border-radius: 16px; }
+#cassette svg { width: 100%; height: auto; display: block; }
+.reel { transform-box: fill-box; transform-origin: center; }
+.tape.playing .reel { animation: reel 1.4s linear infinite; }
+@keyframes reel { to { transform: rotate(360deg); } }
+.ico-pause { display: none; }
+.tape.playing .ico-play { display: none; }
+.tape.playing .ico-pause { display: inline; }
+.play-badge { transition: opacity 0.3s ease; }
+.tape.playing .play-badge { opacity: 0.55; }
+.tape-bar { width: min(100%, 300px); height: 4px; border-radius: 2px; background: rgba(178, 60, 93, 0.15); overflow: hidden; }
+#tape-progress { display: block; height: 100%; width: 0; background: var(--rose-deep); transition: width 0.25s linear; }
+.tape-hint { font-style: italic; font-size: 15px; color: var(--ink-soft); }
+.tape-full { font-size: 13px; color: var(--rose-deep); text-underline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .tape.playing .reel { animation: none; } }
+
 /* ---------- Our song ---------- */
 .song { width: 100%; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 16px 18px; background: var(--paper); border-radius: 18px; padding: 18px; box-shadow: 0 18px 40px -22px rgba(120, 40, 64, 0.45); }
 .vinyl { width: 76px; height: 76px; border-radius: 50%; background: radial-gradient(circle, #f6c5d2 0 15%, #b23c5d 15.5% 30%, #1d1417 31%, #2b2024 40%, #1d1417 41%, #2b2024 52%, #1d1417 53%, #2b2024 66%, #1d1417 67% 100%); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.5); position: relative; }
@@ -325,17 +346,37 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
     </span>
   </section>
 
-  <section class="song" aria-label="Notre son">
-    <div class="vinyl" aria-hidden="true"></div>
-    <div class="song-info">
-      <span class="song-label">À écouter en lisant</span>
-      <span class="song-title">Luz de Luna</span>
-      <span class="song-artist">PNL</span>
-    </div>
-    <div class="song-links">
-      <a class="song-btn" href="https://open.spotify.com/search/PNL%20Luz%20de%20Luna" target="_blank" rel="noopener">Spotify</a>
-      <a class="song-btn alt" href="https://www.youtube.com/results?search_query=PNL+Luz+de+Luna" target="_blank" rel="noopener">YouTube</a>
-    </div>
+  <section class="tape" aria-label="Notre son">
+    <span class="tape-top">Un extrait pour toi</span>
+    <button id="cassette" type="button" aria-pressed="false" aria-label="Lancer l’extrait de La vie est belle de PNL">
+      <svg viewBox="0 0 320 210" aria-hidden="true">
+        <defs>
+          <linearGradient id="tb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c9d6"/><stop offset="1" stop-color="#e59bb2"/></linearGradient>
+        </defs>
+        <ellipse cx="160" cy="202" rx="132" ry="6" fill="rgba(120,40,64,0.2)"/>
+        <rect x="6" y="6" width="308" height="188" rx="14" fill="url(#tb)" stroke="#c9748e" stroke-width="1.5"/>
+        <g fill="#b9637d"><circle cx="20" cy="20" r="4"/><circle cx="300" cy="20" r="4"/><circle cx="20" cy="180" r="4"/><circle cx="300" cy="180" r="4"/></g>
+        <g stroke="#f6c9d6" stroke-width="1.2"><path d="M17 20h6"/><path d="M297 20h6"/><path d="M17 180h6"/><path d="M297 180h6"/></g>
+        <rect x="26" y="18" width="268" height="120" rx="8" fill="#fffaf5"/>
+        <path d="M26 26a8 8 0 0 1 8-8h252a8 8 0 0 1 8 8v14H26z" fill="#b23c5d"/>
+        <text x="38" y="34" font-family="Lora, Georgia, serif" font-size="11" letter-spacing="2" fill="#fff">FACE A</text>
+        <text x="282" y="34" text-anchor="end" font-family="Lora, Georgia, serif" font-size="11" letter-spacing="2" fill="#fff">C-60</text>
+        <text x="160" y="66" text-anchor="middle" font-family="Mrs Saint Delafield, Snell Roundhand, cursive" font-size="30" fill="#4b2a34">La vie est belle</text>
+        <rect x="74" y="74" width="172" height="46" rx="23" fill="#2a1d20"/>
+        <path d="M112 117 Q160 124 208 117" stroke="#6b4433" stroke-width="2" fill="none"/>
+        <circle cx="112" cy="97" r="21" fill="#5a3a2c"/>
+        <circle cx="208" cy="97" r="14" fill="#5a3a2c"/>
+        <g transform="translate(112 97)"><g class="reel"><circle r="13" fill="#f6efe9"/><circle r="5" fill="#2a1d20"/><g fill="#2a1d20"><rect x="-1.5" y="-12" width="3" height="5"/><rect x="-1.5" y="7" width="3" height="5"/><rect x="-12" y="-1.5" width="5" height="3"/><rect x="7" y="-1.5" width="5" height="3"/></g></g></g>
+        <g transform="translate(208 97)"><g class="reel"><circle r="13" fill="#f6efe9"/><circle r="5" fill="#2a1d20"/><g fill="#2a1d20"><rect x="-1.5" y="-12" width="3" height="5"/><rect x="-1.5" y="7" width="3" height="5"/><rect x="-12" y="-1.5" width="5" height="3"/><rect x="7" y="-1.5" width="5" height="3"/></g></g></g>
+        <text x="160" y="133" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="10" letter-spacing="1.5" fill="#7d5a63">PNL · POUR MOUNA</text>
+        <path d="M70 194 L86 150 L234 150 L250 194 Z" fill="#e7a3b8" stroke="#c9748e" stroke-width="1.2"/>
+        <g fill="#b9637d"><circle cx="112" cy="172" r="6"/><circle cx="208" cy="172" r="6"/><rect x="146" y="166" width="10" height="10" rx="2"/><rect x="164" y="166" width="10" height="10" rx="2"/></g>
+        <g class="play-badge"><circle cx="160" cy="97" r="15" fill="#b23c5d"/><path class="ico-play" d="M155 89 L168 97 L155 105 Z" fill="#fff"/><g class="ico-pause" fill="#fff"><rect x="153" y="89" width="5" height="16" rx="1"/><rect x="162" y="89" width="5" height="16" rx="1"/></g></g>
+      </svg>
+    </button>
+    <div class="tape-bar" aria-hidden="true"><span id="tape-progress"></span></div>
+    <span class="tape-hint" id="tape-hint">Touche la cassette</span>
+    <a class="tape-full" href="https://music.apple.com/fr/album/la-vie-est-belle/1663880916?i=1663882252" target="_blank" rel="noopener">Écouter le son en entier</a>
   </section>
 
   <article class="letter" id="letter" aria-label="Le mot de Yassir">
@@ -895,6 +936,57 @@ body.opened .a-stem { stroke-dasharray: 1; animation: draw 1s ease-out backwards
   document.getElementById("again").addEventListener("click", function (e) {
     var r = e.currentTarget.getBoundingClientRect();
     rain(r.left + r.width / 2, r.top);
+  });
+
+  /* ---------- cassette: official 30-second preview ---------- */
+  var tapeEl = document.querySelector(".tape");
+  var cassette = document.getElementById("cassette");
+  var tapeHint = document.getElementById("tape-hint");
+  var tapeProg = document.getElementById("tape-progress");
+  var PREVIEW = "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/47/c6/9a/47c69ae4-f675-25db-577e-9eaf7cd75e33/mzaf_15565945451936180078.plus.aac.p.m4a";
+  var tape = new Audio();
+  tape.preload = "none";
+  tape.src = PREVIEW;
+  try {
+    window.__tapeCb = function (d) {
+      try {
+        var hit = (d.results || []).filter(function (r) { return r.trackId === 1663882252 && r.previewUrl; })[0];
+        if (hit && tape.paused && tape.currentTime === 0) tape.src = hit.previewUrl;
+      } catch (e) {}
+    };
+    var js = document.createElement("script");
+    js.src = "https://itunes.apple.com/lookup?id=1663882252&country=fr&callback=__tapeCb";
+    js.async = true;
+    document.head.appendChild(js);
+  } catch (e) {}
+  function setPlaying(on) {
+    tapeEl.classList.toggle("playing", on);
+    cassette.setAttribute("aria-pressed", on ? "true" : "false");
+    cassette.setAttribute("aria-label", on ? "Mettre l’extrait en pause" : "Lancer l’extrait de La vie est belle de PNL");
+  }
+  cassette.addEventListener("click", function () {
+    if (tape.paused) {
+      if (tape.ended) tape.currentTime = 0;
+      var p = tape.play();
+      tapeHint.textContent = "Ça se lance…";
+      if (p && p.then) p.then(function () { tapeHint.textContent = "PNL · La vie est belle"; }).catch(function () { setPlaying(false); tapeHint.textContent = "Touche encore une fois la cassette"; });
+      setPlaying(true);
+    } else {
+      tape.pause();
+      setPlaying(false);
+      tapeHint.textContent = "En pause, touche pour reprendre";
+    }
+  });
+  tape.addEventListener("timeupdate", function () {
+    if (tape.duration) tapeProg.style.width = (tape.currentTime / tape.duration * 100).toFixed(1) + "%";
+  });
+  tape.addEventListener("ended", function () {
+    setPlaying(false);
+    tapeProg.style.width = "100%";
+    tapeHint.textContent = "Touche pour réécouter";
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden && !tape.paused) { tape.pause(); setPlaying(false); tapeHint.textContent = "En pause, touche pour reprendre"; }
   });
 
   /* ---------- opening ---------- */
